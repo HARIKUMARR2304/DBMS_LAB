@@ -1,0 +1,83 @@
+DROP TABLE IF EXISTS employees;
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary DECIMAL(10, 2),
+    bonus DECIMAL(10, 2),
+    status_flags INT,     
+    manager_id INT
+);
+
+INSERT INTO employees VALUES
+(1, 'Deepak', 'Engineering', 95000.00, 5000.00, 7, NULL),
+(2, 'Shiva', 'Engineering', 70000.00, 3000.00, 3, 1),
+(3, 'Deekshith', 'HR', 55000.00, 2000.00, 1, 1),
+(4, 'Manoj', 'Finance', 85000.00, NULL, 3, 1),
+(5, 'Harikumar', 'Engineering', 45000.00, 1500.00, 1, 2);
+
+
+SELECT 
+    name,
+    salary,
+    bonus,
+
+   
+    (salary + COALESCE(bonus, 0))              AS total_compensation, 
+    (salary - 5000.00)                        AS salary_deduction,   
+    (salary * 1.10)                           AS projected_raise,    
+    (salary / 12)                             AS monthly_salary,    
+    (emp_id % 2)                              AS is_odd_id,          
+
+    (status_flags & 2)                        AS bitwise_and_fulltime,
+    (status_flags | 8)                        AS bitwise_or_flagged,  
+    (status_flags ^ 1)                        AS bitwise_xor_toggle,   
+    (~status_flags)                           AS bitwise_not,         
+    (status_flags << 1)                       AS bitwise_shift_left,   
+    (status_flags >> 1)                       AS bitwise_shift_right   
+
+FROM employees
+WHERE 
+
+    salary > 40000.00                       
+    AND salary >= 45000.00                    
+    AND salary < 120000.00                    
+    AND salary <= 100000.00                 
+    AND department != 'Marketing'            
+    AND department <> 'Sales'               
+
+ 
+    AND (
+        department = 'Engineering' 
+        OR department = 'Finance'
+    )
+    AND NOT (emp_id = 99)
+
+
+    AND salary BETWEEN 45000.00 AND 100000.00
+
+
+    AND department IN ('Engineering', 'Finance', 'HR')
+
+
+    AND name LIKE '%e%'                  
+    AND name NOT LIKE 'Z%'                   
+
+
+    AND (bonus IS NOT NULL OR bonus IS NULL)
+
+
+    AND EXISTS (
+        SELECT 1 
+        FROM employees e2 
+        WHERE e2.manager_id = employees.emp_id
+    )
+
+    AND salary > ANY (
+        SELECT salary 
+        FROM employees 
+        WHERE department = 'HR'
+    )
+    AND salary < ALL (
+        SELECT 200000.00
+    );
